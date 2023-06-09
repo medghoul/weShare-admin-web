@@ -1,24 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import { ColorModeContext, useMode } from './theme';
+import  Home  from './global/Home';
+import LoginForm from './pages/authentication/LoginForm';
+import RegisterForm from './pages/authentication/RegisterForm';
+import { createBrowserRouter } from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
+import ForgotPassword from './pages/authentication/ForgotPassword';
+import termsConditions from './global/terms&conditions';
+const router=createBrowserRouter([
+  {path:'/',element:<Home/>},
+  {path:'/login',element:<LoginForm/>},
+  {path:'/register',element:<RegisterForm/>},
+  {path:'/reset-password',element:<ForgotPassword/>},
+  {path:'/terms-and-conditions',element:<termsConditions/>},
+])
 
 function App() {
+  const [theme, colorMode] = useMode();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    
+      <ColorModeContext.Provider value={colorMode}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline>
+           <RouterProvider router={router} />
+          </CssBaseline>
+
+        </ThemeProvider>
+      </ColorModeContext.Provider>
+   
   );
 }
 
