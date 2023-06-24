@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import {
   InputLabel,
   Button,
@@ -78,8 +78,10 @@ const LoginForm = () => {
     email: '',
     password: '',
   });
-  const googleHandler = async () => {
-    console.error('Login');
+
+
+  const googleHandler = () => {
+    console.log('googleHandler');
   };
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
@@ -274,7 +276,7 @@ const LoginForm = () => {
             type="submit"
             variant="contained"
             fullWidth
-            style={{ marginTop: 16 }}
+            style={{ marginTop: 16 , marginBottom: 16}}
             onClick={handleSubmit}
             disableElevation
             disabled={isSubmitting}
@@ -297,23 +299,6 @@ const LoginForm = () => {
             </Grid>
           </Grid>
         </Paper>
-        <Stack style={stackStyle} direction="row" spacing={1}>
-          <Typography
-            to="/PrivacyPolicy"
-            variant="subtitle1"
-            sx={{ textDecoration: 'none' }}
-          >
-            Privacy Policy
-          </Typography>
-          <Typography>.</Typography>
-          <Typography
-            to="/TermsOfService"
-            variant="subtitle1"
-            sx={{ textDecoration: 'none' }}
-          >
-            Terms of Service
-          </Typography>
-        </Stack>
       </Grid>
     </Fragment>
   );

@@ -17,6 +17,8 @@ import TranslateIcon from '@mui/icons-material/Translate';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useNavigate } from 'react-router-dom';
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   IconLogout,
   IconSearch,
@@ -32,6 +34,14 @@ const Topbar = () => {
   const colorMode = useContext(ColorModeContext);
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null); // Aggiunto lo stato per l'ancora del menu
+  const [openToast, setOpenToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastSeverity, setToastSeverity] = useState('');
+  const showToastMessage = () => {
+    toast.success('Success Notification !', {
+        position: toast.POSITION.TOP_RIGHT
+    });
+};
 
   function stringAvatar(name) {
     return {
@@ -47,6 +57,13 @@ const Topbar = () => {
   const handleChipClick = (event) => {
     setAnchorEl(event.currentTarget); // Imposta l'ancora del menu quando il chip viene cliccato
   };
+  const handleNotificationsClick = () => {
+    console.log('ToastBar')
+    setOpenToast(true);
+    setToastMessage('Hello There!');
+    setToastSeverity('success');
+
+  }
 
   const handleMenuClose = () => {
     setAnchorEl(null); // Chiudi il menu
@@ -82,10 +99,10 @@ const Topbar = () => {
           )}
         </IconButton>
         <IconButton>
-          <TranslateIcon/>
+          <TranslateIcon />
         </IconButton>
         <IconButton>
-          <NotificationsOutlinedIcon />
+          <NotificationsOutlinedIcon onClick={showToastMessage}/>
         </IconButton>
         <IconButton onClick={handleChipClick}>
           <Chip
@@ -140,7 +157,7 @@ const Topbar = () => {
           onClose={handleMenuClose}
         >
           <MenuItem onClick={handleLoginClick}>
-            <LoginIcon  />
+            <LoginIcon />
             Login
           </MenuItem>
           <MenuItem onClick={handleRegisterClick}>
