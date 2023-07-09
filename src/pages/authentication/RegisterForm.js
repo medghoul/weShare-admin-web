@@ -17,7 +17,10 @@ import {
   OutlinedInput,
   InputLabel,
   Box,
+  Icon,
+
 } from '@mui/material';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Link } from 'react-router-dom';
@@ -120,7 +123,7 @@ const RegisterForm = () => {
   async function onClickHandler() {
     setIsSubmitting(!isSubmitting);
     try {
-      const response = await fetch('http://localhost:8080/api/users', {
+      const response = await fetch('http://localhost:8181/api/users', {
         method: 'POST',
         body: JSON.stringify(formData),
         headers: {
@@ -163,6 +166,37 @@ const RegisterForm = () => {
       <Grid style={style}>
         <Grid align="center">
           <Paper style={paperStyle}>
+          <Typography
+                  variant="body1"
+                  sx={{ display: 'flex' }}
+                >
+                  <Icon color={colors.primary[500]} sx={{ marginRight: '0px' }}>
+                    <KeyboardBackspaceIcon style={{ marginBottom: '0px' }} />
+                  </Icon>
+                  <span
+                    style={{
+                      textDecoration: 'none',
+                      color: 'inherit',
+                      cursor: 'pointer',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      '&:hover': {
+                        textDecoration: 'none',
+                      },
+                    }}
+                  >
+                    <Link
+                      to="/"
+                      style={{
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Back
+                    </Link>
+                  </span>
+                </Typography>
             <Avatar style={avatarStyle}>
               <Logo />
             </Avatar>

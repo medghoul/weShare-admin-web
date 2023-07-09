@@ -6,10 +6,13 @@ import RegisterForm from './pages/authentication/RegisterForm';
 import { createBrowserRouter } from 'react-router-dom';
 import { RouterProvider } from 'react-router-dom';
 import ForgotPassword from './pages/authentication/ForgotPassword';
-import termsConditions from './global/terms&conditions';
+import Profile from './pages/profile/Profile'
+import AddTrip from './pages/profile/Add-Trip';
 const router=createBrowserRouter([
   {path:'/',element:<Home/>},
   {path:'/login',element:<LoginForm/>},
+  {path:'/profile',element:<Profile/>},
+  {path:'/profile/add-trip',element:<AddTrip/>},
   {path:'/register',element:<RegisterForm/>},
   {path:'/reset-password',element:<ForgotPassword/>},
   {path:'/terms-and-conditions',element:<termsConditions/>},
@@ -25,7 +28,6 @@ function App() {
           <CssBaseline>
            <RouterProvider router={router} />
           </CssBaseline>
-
         </ThemeProvider>
       </ColorModeContext.Provider>
    

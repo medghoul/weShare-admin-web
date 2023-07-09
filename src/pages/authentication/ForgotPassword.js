@@ -132,7 +132,7 @@ const ForgotPassword = () => {
   const onClickHandlerVerifcationMail = async () => {
     console.log(JSON.stringify({ email: email }));
     const response = await fetch(
-      'http://localhost:8080/api/users/login/forgot',
+      'http://localhost:8181/api/users/login/forgot',
       {
         method: 'POST',
         headers: {
@@ -182,7 +182,7 @@ const ForgotPassword = () => {
     console.log('Reset password');
     if (password === confirmPassword) {
       const response = await fetch(
-        'http://localhost:8080/api/users/login/reset',
+        'http://localhost:8181/api/users/login/reset',
         {
           method: 'PUT',
           headers: {

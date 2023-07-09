@@ -14,8 +14,10 @@ import {
   Divider,
   Box,
   Stack,
+  Icon,
   useMediaQuery,
 } from '@mui/material';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import Google from '../../images/icons/social-google.svg';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -28,10 +30,15 @@ import Checkbox from '@mui/material/Checkbox';
 import { tokens } from '../../theme';
 import backgroundImage1 from '../../images/weshare-left.7317ad1f.png';
 import backgroundImage2 from '../../images/weshare-right.16b9c9bb.png';
-import {Link} from 'react-router-dom'
+import SnackbarComponent from '../../component/toastBar/SnackBarComponent';
+import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 const LoginForm = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [open, setOpen] = useState(false);
+  const [msgToastBar, setMsgToastBar] = useState('');
+  const [type, setType] = useState('');
   const paperStyle = {
     padding: 33,
     height: 'auto',
@@ -69,11 +76,10 @@ const LoginForm = () => {
     backgroundColor: '#1bbd7e',
   };
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
-  const btnstyle = { margin: '8px 0' };
-  const [error, setError] = useState('');
   const signIn = useSignIn();
   const [checked, setChecked] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -98,64 +104,89 @@ const LoginForm = () => {
   };
   const handleSubmit = async () => {
     console.log(formData);
-    // Validazione dei dati di input
     if (!formData.email || !formData.password) {
       alert("Inserisci l'email e la password.");
       return;
     }
-    // Invia i dati del form al server
-    const response = await fetch('http://localhost:8080/api/users/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-    const data = await response.json();
-    console.log(data);
-    if (response.status === 422 || response.status === 401) {
-      return response;
-    }
-    if (!response.ok) {
-      throw json({ message: 'Could not authenticate user.' }, { status: 500 });
-    }
-    const token = data.token;
-    localStorage.setItem('token', token);
-  };
-  const onClickHandler = async () => {
-    setIsSubmitting(!isSubmitting);
     try {
-      const response = await axios.post(
-        'http://localhost:8080/api/users/login',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-        }
-      );
-      signIn({
-        token: response.data.token,
-        expiresIn: 3600,
-        tokenType: 'Bearer',
-        authState: { email: formData.email, id: response.data.id },
+      const response = await fetch('http://localhost:8181/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
-    } catch (err) {
-      if (err && err instanceof AxiosError) {
-        setError(err.response?.data.message || 'Unknown error occurred.');
-      } else if (err && err instanceof Error) {
-        setError(err.message || 'Unknown error occurred.');
+      const data = await response.json();
+      if (response.ok) {
+        setOpen(true);
+        setMsgToastBar('Welcome Back');
+        setType('success');
+        const { id, token } = data;
+        const userData = { id, token };
+        localStorage.setItem('userData', JSON.stringify(userData));
+        setTimeout(() => {
+          navigate('/');
+        }, 1000);
       }
-      console.log('Error: ', err);
+    } catch (error) {
+      console.log(error.message)
+      setOpen(true);
+      setMsgToastBar('An error has occurred, please verify your credentials');
+      setType('error');
+      setFormData({
+        email: formData.email,
+        password: '',
+      });
     }
   };
 
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+
+
   return (
     <Fragment>
+      <SnackbarComponent
+        open={open} handleClose={handleClose} autoHideDuration={5000} message={msgToastBar} severity={type} />
       <Grid style={style}>
         <Paper style={paperStyle}>
+          <Typography
+            variant="body1"
+            sx={{ display: 'flex' }}
+          >
+            <Icon color={colors.primary[500]} sx={{ marginRight: '0px' }}>
+              <KeyboardBackspaceIcon style={{ marginBottom: '0px' }} />
+            </Icon>
+            <span
+              style={{
+                textDecoration: 'none',
+                color: 'inherit',
+                cursor: 'pointer',
+                fontSize: '16px',
+                fontWeight: '600',
+                '&:hover': {
+                  textDecoration: 'none',
+                },
+              }}
+            >
+              <Link
+                to="/"
+                style={{
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  cursor: 'pointer',
+                }}
+              >
+                Back
+              </Link>
+            </span>
+          </Typography>
           <Grid align="center">
             <Avatar style={avatarStyle}>
               <Logo />
@@ -276,7 +307,7 @@ const LoginForm = () => {
             type="submit"
             variant="contained"
             fullWidth
-            style={{ marginTop: 16 , marginBottom: 16}}
+            style={{ marginTop: 16, marginBottom: 16 }}
             onClick={handleSubmit}
             disableElevation
             disabled={isSubmitting}
@@ -293,7 +324,7 @@ const LoginForm = () => {
                 sx={{ textDecoration: 'none' }}
               >
                 <Link to='/register'>
-                Don&apos;t have an account?{' '}
+                  Don&apos;t have an account?{' '}
                 </Link>
               </Typography>
             </Grid>
